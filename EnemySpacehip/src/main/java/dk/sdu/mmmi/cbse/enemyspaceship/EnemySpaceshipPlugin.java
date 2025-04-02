@@ -3,6 +3,8 @@ package dk.sdu.mmmi.cbse.enemyspaceship;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
+import dk.sdu.mmmi.cbse.common.parts.HealthPart;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
 public class EnemySpaceshipPlugin implements IGamePluginService {
@@ -23,6 +25,8 @@ public class EnemySpaceshipPlugin implements IGamePluginService {
         enemySpacehip.setX(gameData.getDisplayHeight()/10);
         enemySpacehip.setY(gameData.getDisplayWidth()/10);
         enemySpacehip.setRadius(8);
+        enemySpacehip.addPart(new CollisionPart());
+        enemySpacehip.addPart(new HealthPart(50));
         return enemySpacehip;
     }
 }

@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.cbse.collisionsystem;
 
+import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
+import dk.sdu.mmmi.cbse.common.parts.HealthPart;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
@@ -21,10 +23,18 @@ public class CollisionDetector implements IPostEntityProcessingService {
                     continue;                    
                 }
 
+                if (entity1.getClass().equals(entity2.getClass())) {
+                    continue;
+                }
+
                 // CollisionDetection
                 if (this.collides(entity1, entity2)) {
-                    world.removeEntity(entity1);
-                    world.removeEntity(entity2);
+                    if(entity1.hasPart(CollisionPart.class) && entity2.hasPart(HealthPart.class)){
+                        HealthPart hp = entity1.getPart(HealthPart.class);
+                        hp.setHealth(hp.getHealth()-1);
+                    } else if(entity1.hasPart(CollisionPart.class)) {
+                        world.removeEntity(entity1);
+                    }
                 }
             }
         }

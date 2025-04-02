@@ -1,6 +1,10 @@
 package dk.sdu.mmmi.cbse.common.data;
 
+import dk.sdu.mmmi.cbse.common.services.Part;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 public class Entity implements Serializable {
@@ -12,7 +16,23 @@ public class Entity implements Serializable {
     private double y;
     private double rotation;
     private float radius;
-            
+    private Map<Class<? extends Part>, Part> parts = new HashMap<>();
+
+    public <T extends Part> T getPart(Class<T> partClass) {
+        return partClass.cast(parts.get(partClass));
+    }
+
+    public <T extends Part> void addPart(T part) {
+        parts.put(part.getClass(), part);
+    }
+
+    public <T extends Part> void removePart(Class<T> partClass) {
+        parts.remove(partClass);
+    }
+
+    public boolean hasPart(Class<? extends Part> partClass) {
+        return parts.containsKey(partClass);
+    }
 
     public String getID() {
         return ID.toString();

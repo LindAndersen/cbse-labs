@@ -4,6 +4,7 @@ import dk.sdu.mmmi.cbse.common.asteroids.Asteroid;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import java.util.Random;
 
