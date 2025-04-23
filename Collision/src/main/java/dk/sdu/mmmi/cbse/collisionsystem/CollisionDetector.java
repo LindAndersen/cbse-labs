@@ -29,11 +29,11 @@ public class CollisionDetector implements IPostEntityProcessingService {
 
                 // CollisionDetection
                 if (this.collides(entity1, entity2)) {
-                    if(entity1.hasPart(CollisionPart.class) && entity2.hasPart(HealthPart.class)){
-                        HealthPart hp = entity1.getPart(HealthPart.class);
-                        hp.setHealth(hp.getHealth()-1);
-                    } else if(entity1.hasPart(CollisionPart.class)) {
-                        world.removeEntity(entity1);
+                    if (entity1.hasPart(CollisionPart.class)) {
+                        entity1.getPart(CollisionPart.class).setHit(true);
+                    }
+                    if (entity2.hasPart(CollisionPart.class)) {
+                        entity2.getPart(CollisionPart.class).setHit(true);
                     }
                 }
             }

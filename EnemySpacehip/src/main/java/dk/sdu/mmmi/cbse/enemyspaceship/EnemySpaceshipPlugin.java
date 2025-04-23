@@ -20,7 +20,7 @@ public class EnemySpaceshipPlugin implements IGamePluginService {
 
     private Entity createEnemySpacehip(GameData gameData)
     {
-        Entity enemySpacehip = new EnemySpacehip();
+        Entity enemySpacehip = new EnemySpaceship();
         enemySpacehip.setPolygonCoordinates(-5,-5,10,0,-5,5);
         enemySpacehip.setX(gameData.getDisplayHeight()/10);
         enemySpacehip.setY(gameData.getDisplayWidth()/10);

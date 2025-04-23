@@ -6,6 +6,8 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
+import dk.sdu.mmmi.cbse.common.parts.HealthPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
 import java.util.Collection;
@@ -20,6 +22,19 @@ public class PlayerControlSystem implements IEntityProcessingService {
     public void process(GameData gameData, World world) {
             
         for (Entity player : world.getEntities(Player.class)) {
+            System.out.println(player.getPart(HealthPart.class).getHealth());
+            if (player.hasPart(HealthPart.class) && player.hasPart(CollisionPart.class) && player.getPart(CollisionPart.class).isHit())
+            {
+                HealthPart playerHealthPart = player.getPart(HealthPart.class);
+                playerHealthPart.handleHit();
+                if (!playerHealthPart.isAlive())
+                {
+                    world.removeEntity(player);
+                }
+
+                player.getPart(CollisionPart.class).setHit(false);
+            }
+
             if (gameData.getKeys().isDown(GameKeys.LEFT)) {
                 player.setRotation(player.getRotation() - 5);                
             }

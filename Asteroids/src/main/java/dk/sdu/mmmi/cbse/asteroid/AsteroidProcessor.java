@@ -5,6 +5,7 @@ import dk.sdu.mmmi.cbse.common.asteroids.IAsteroidSplitter;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
 public class AsteroidProcessor implements IEntityProcessingService {
@@ -15,6 +16,16 @@ public class AsteroidProcessor implements IEntityProcessingService {
     public void process(GameData gameData, World world) {
 
         for (Entity asteroid : world.getEntities(Asteroid.class)) {
+            if (asteroid.hasPart(CollisionPart.class) && asteroid.getPart(CollisionPart.class).isHit())
+            {
+                if(asteroid.getRadius() > 7)
+                {
+                    asteroidSplitter.createSplitAsteroid(asteroid, world);
+                } else {
+                    world.removeEntity(asteroid);
+                }
+            }
+
             double changeX = Math.cos(Math.toRadians(asteroid.getRotation()));
             double changeY = Math.sin(Math.toRadians(asteroid.getRotation()));
 

@@ -3,7 +3,6 @@ package dk.sdu.mmmi.cbse.enemyspaceship;
 import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
-import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
@@ -13,12 +12,12 @@ import java.util.ServiceLoader;
 
 import static java.util.stream.Collectors.toList;
 
-public class EnemySpacehipControlSystem implements IEntityProcessingService {
+public class EnemySpaceshipControlSystem implements IEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
         Random random = new Random();
 
-        for (Entity spaceship : world.getEntities(EnemySpacehip.class)) {
+        for (Entity spaceship : world.getEntities(EnemySpaceship.class)) {
             int randomInt = random.nextInt(-3,3) + 1;
             spaceship.setRotation(spaceship.getRotation() + randomInt);
 
