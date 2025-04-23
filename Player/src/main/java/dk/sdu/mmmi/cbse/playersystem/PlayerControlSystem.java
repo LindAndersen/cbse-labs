@@ -1,6 +1,5 @@
 package dk.sdu.mmmi.cbse.playersystem;
 
-import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
@@ -17,12 +16,13 @@ import static java.util.stream.Collectors.toList;
 
 
 public class PlayerControlSystem implements IEntityProcessingService {
+    private static final long SHOOT_COOLDOWN = 100;
 
     @Override
     public void process(GameData gameData, World world) {
             
-        for (Entity player : world.getEntities(Player.class)) {
-            System.out.println(player.getPart(HealthPart.class).getHealth());
+        for (Entity entityPlayer : world.getEntities(Player.class)) {
+            Player player = (Player) entityPlayer;
             if (player.hasPart(HealthPart.class) && player.hasPart(CollisionPart.class) && player.getPart(CollisionPart.class).isHit())
             {
                 HealthPart playerHealthPart = player.getPart(HealthPart.class);
@@ -47,9 +47,13 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setX(player.getX() + changeX);
                 player.setY(player.getY() + changeY);
             }
-            if(gameData.getKeys().isDown(GameKeys.SPACE)) {                
+            long currentTime = System.currentTimeMillis();
+            if(gameData.getKeys().isDown(GameKeys.SPACE) && (currentTime - player.getLastShotTime()) >= SHOOT_COOLDOWN) {
                 getBulletSPIs().stream().findFirst().ifPresent(
-                        spi -> {world.addEntity(spi.createBullet(player, gameData));}
+                        spi -> {
+                            world.addEntity(spi.createBullet(player, gameData));
+                            player.setLastShotTime(currentTime);
+                        }
                 );
             }
             

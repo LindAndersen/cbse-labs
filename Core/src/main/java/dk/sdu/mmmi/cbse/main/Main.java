@@ -39,14 +39,15 @@ public class Main extends Application {
         gameWindow.getChildren().add(text);
 
         Scene scene = new Scene(gameWindow);
+        //scene.setOnKeyPressed(event -> System.out.println("PRESSED: " + event.getCode()));
         scene.setOnKeyPressed(event -> {
-            if (event.getCode().equals(KeyCode.LEFT)) {
+            if (event.getCode().equals(KeyCode.A)) {
                 gameData.getKeys().setKey(GameKeys.LEFT, true);
             }
-            if (event.getCode().equals(KeyCode.RIGHT)) {
+            if (event.getCode().equals(KeyCode.D)) {
                 gameData.getKeys().setKey(GameKeys.RIGHT, true);
             }
-            if (event.getCode().equals(KeyCode.UP)) {
+            if (event.getCode().equals(KeyCode.W)) {
                 gameData.getKeys().setKey(GameKeys.UP, true);
             }
             if (event.getCode().equals(KeyCode.SPACE)) {
@@ -54,13 +55,13 @@ public class Main extends Application {
             }
         });
         scene.setOnKeyReleased(event -> {
-            if (event.getCode().equals(KeyCode.LEFT)) {
+            if (event.getCode().equals(KeyCode.A)) {
                 gameData.getKeys().setKey(GameKeys.LEFT, false);
             }
-            if (event.getCode().equals(KeyCode.RIGHT)) {
+            if (event.getCode().equals(KeyCode.D)) {
                 gameData.getKeys().setKey(GameKeys.RIGHT, false);
             }
-            if (event.getCode().equals(KeyCode.UP)) {
+            if (event.getCode().equals(KeyCode.W)) {
                 gameData.getKeys().setKey(GameKeys.UP, false);
             }
             if (event.getCode().equals(KeyCode.SPACE)) {

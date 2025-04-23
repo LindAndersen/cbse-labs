@@ -4,6 +4,8 @@ import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
+import dk.sdu.mmmi.cbse.common.parts.HealthPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
 import java.util.Collection;
@@ -18,6 +20,18 @@ public class EnemySpaceshipControlSystem implements IEntityProcessingService {
         Random random = new Random();
 
         for (Entity spaceship : world.getEntities(EnemySpaceship.class)) {
+            if (spaceship.hasPart(HealthPart.class) && spaceship.hasPart(CollisionPart.class) && spaceship.getPart(CollisionPart.class).isHit())
+            {
+                HealthPart spaceshipHealthPart = spaceship.getPart(HealthPart.class);
+                spaceshipHealthPart.handleHit();
+                if (!spaceshipHealthPart.isAlive())
+                {
+                    world.removeEntity(spaceship);
+                }
+
+                spaceship.getPart(CollisionPart.class).setHit(false);
+            }
+
             int randomInt = random.nextInt(-3,3) + 1;
             spaceship.setRotation(spaceship.getRotation() + randomInt);
 
