@@ -4,7 +4,7 @@ import dk.sdu.mmmi.cbse.enemyspaceship.EnemySpaceshipControlSystem;
 import dk.sdu.mmmi.cbse.enemyspaceship.EnemySpaceshipPlugin;
 import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
 
-module EnemySpacehip {
+module EnemySpaceship {
     requires Common;
     requires CommonBullet;
     uses BulletSPI;

@@ -7,9 +7,14 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+
+import java.lang.module.Configuration;
+import java.lang.module.ModuleFinder;
+import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.ServiceLoader;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
 import javafx.animation.AnimationTimer;
@@ -39,7 +44,6 @@ public class Main extends Application {
         gameWindow.getChildren().add(text);
 
         Scene scene = new Scene(gameWindow);
-        //scene.setOnKeyPressed(event -> System.out.println("PRESSED: " + event.getCode()));
         scene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.A)) {
                 gameData.getKeys().setKey(GameKeys.LEFT, true);
@@ -127,6 +131,13 @@ public class Main extends Application {
             polygon.setRotate(entity.getRotation());
         }
 
+    }
+
+    private static ModuleLayer createModuleLayer(String from, String module) {
+        ModuleFinder finder = ModuleFinder.of(Paths.get(from));
+        ModuleLayer parent = ModuleLayer.boot();
+        Configuration cf = parent.configuration().resolve(finder, ModuleFinder.of(), Set.of(module));
+        return parent.defineModulesWithOneLoader(cf, ClassLoader.getSystemClassLoader());
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {

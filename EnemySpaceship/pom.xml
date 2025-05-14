@@ -7,7 +7,7 @@
         <version>1.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>EnemySpacehip</artifactId>
+    <artifactId>EnemySpaceship</artifactId>
     <packaging>jar</packaging>
 
     <name>EnemySpacehip</name>
