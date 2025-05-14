@@ -8,15 +8,13 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
-import java.lang.module.Configuration;
-import java.lang.module.ModuleFinder;
-import java.nio.file.Paths;
 import java.util.Collection;
 import java.util.Map;
 import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
+
+import dk.sdu.mmmi.cbse.common.util.MultiLayerServiceLocator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -34,6 +32,7 @@ public class Main extends Application {
     private final Pane gameWindow = new Pane();
 
     public static void main(String[] args) {
+        MultiLayerServiceLocator.INSTANCE.init();
         launch(Main.class);
     }
 
@@ -133,22 +132,15 @@ public class Main extends Application {
 
     }
 
-    private static ModuleLayer createModuleLayer(String from, String module) {
-        ModuleFinder finder = ModuleFinder.of(Paths.get(from));
-        ModuleLayer parent = ModuleLayer.boot();
-        Configuration cf = parent.configuration().resolve(finder, ModuleFinder.of(), Set.of(module));
-        return parent.defineModulesWithOneLoader(cf, ClassLoader.getSystemClassLoader());
-    }
-
     private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return MultiLayerServiceLocator.INSTANCE.locateAll(IGamePluginService.class);
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return MultiLayerServiceLocator.INSTANCE.locateAll(IEntityProcessingService.class);
     }
 
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return MultiLayerServiceLocator.INSTANCE.locateAll(IPostEntityProcessingService.class);
     }
 }

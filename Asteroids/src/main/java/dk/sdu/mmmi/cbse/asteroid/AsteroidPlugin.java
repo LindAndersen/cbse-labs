@@ -16,8 +16,11 @@ public class AsteroidPlugin implements IGamePluginService {
 
     @Override
     public void start(GameData gameData, World world) {
-        Entity asteroid = createAsteroid(gameData);
-        world.addEntity(asteroid);
+        for (int i = 0; i<10;i++)
+        {
+            Entity asteroid = createAsteroid(gameData);
+            world.addEntity(asteroid);
+        }
     }
 
     @Override
@@ -33,8 +36,8 @@ public class AsteroidPlugin implements IGamePluginService {
         Random rnd = new Random();
         int size = rnd.nextInt(20) + 10;
         asteroid.setPolygonCoordinates(size, -size, -size, -size, -size, size, size, size);
-        asteroid.setX(0);
-        asteroid.setY(0);
+        asteroid.setX(rnd.nextFloat()*gameData.getDisplayWidth());
+        asteroid.setY(rnd.nextFloat()*gameData.getDisplayHeight());
         asteroid.setRadius(size);
         asteroid.setRotation(rnd.nextInt(90));
         return asteroid;
