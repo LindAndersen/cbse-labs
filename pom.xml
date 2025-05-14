@@ -19,13 +19,14 @@
         <module>CommonAsteroids</module>
         <module>Asteroids</module>
         <module>Collision</module>
-        <module>EnemySpacehip</module>
+        <module>EnemySpaceship</module>
     </modules>
     <properties>
         <java>java</java>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>        
         <maven.compiler.source>1.9</maven.compiler.source>
         <maven.compiler.target>1.9</maven.compiler.target>
+        <is.plugin.module>false</is.plugin.module>
     </properties>
     
     <dependencyManagement>
@@ -100,12 +101,15 @@
             </build>
         </profile>
         <profile>
-            <!-- child projects should copy artifact into 'mods-mvn' -->
             <id>child-project</id>
             <activation>
                 <file>
                     <exists>src</exists>
                 </file>
+<!--                <property>-->
+<!--                    <name>is.plugin.module</name>-->
+<!--                    <value>false</value>-->
+<!--                </property>-->
             </activation>
             <build>
                 <plugins>
@@ -136,5 +140,42 @@
                 </plugins>
             </build>
         </profile>
+<!--        <profile>-->
+<!--            <id>plugin-project</id>-->
+<!--            <activation>-->
+<!--                <property>-->
+<!--                    <name>is.plugin.module</name>-->
+<!--                    <value>true</value>-->
+<!--                </property>-->
+<!--            </activation>-->
+<!--            <build>-->
+<!--                <plugins>-->
+<!--                    <plugin>-->
+<!--                        <artifactId>maven-dependency-plugin</artifactId>-->
+<!--                        <version>3.3.0</version>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>copy-plugin</id>-->
+<!--                                <phase>install</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>copy</goal>-->
+<!--                                </goals>-->
+<!--                                <configuration>-->
+<!--                                    <artifactItems>-->
+<!--                                        <artifactItem>-->
+<!--                                            <groupId>${project.groupId}</groupId>-->
+<!--                                            <artifactId>${project.artifactId}</artifactId>-->
+<!--                                            <version>${project.version}</version>-->
+<!--                                            <type>jar</type>-->
+<!--                                        </artifactItem>-->
+<!--                                    </artifactItems>-->
+<!--                                    <outputDirectory>../plugins</outputDirectory>-->
+<!--                                </configuration>-->
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                    </plugin>-->
+<!--                </plugins>-->
+<!--            </build>-->
+<!--        </profile>-->
     </profiles>
 </project>

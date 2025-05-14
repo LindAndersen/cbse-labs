@@ -7,11 +7,14 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
+
+import dk.sdu.mmmi.cbse.common.util.MultiLayerServiceLocator;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -29,6 +32,7 @@ public class Main extends Application {
     private final Pane gameWindow = new Pane();
 
     public static void main(String[] args) {
+        MultiLayerServiceLocator.INSTANCE.init();
         launch(Main.class);
     }
 
@@ -39,7 +43,6 @@ public class Main extends Application {
         gameWindow.getChildren().add(text);
 
         Scene scene = new Scene(gameWindow);
-        //scene.setOnKeyPressed(event -> System.out.println("PRESSED: " + event.getCode()));
         scene.setOnKeyPressed(event -> {
             if (event.getCode().equals(KeyCode.A)) {
                 gameData.getKeys().setKey(GameKeys.LEFT, true);
@@ -130,14 +133,14 @@ public class Main extends Application {
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return MultiLayerServiceLocator.INSTANCE.locateAll(IGamePluginService.class);
     }
 
     private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return MultiLayerServiceLocator.INSTANCE.locateAll(IEntityProcessingService.class);
     }
 
     private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+        return MultiLayerServiceLocator.INSTANCE.locateAll(IPostEntityProcessingService.class);
     }
 }
