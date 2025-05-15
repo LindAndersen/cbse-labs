@@ -1,10 +1,17 @@
+import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
+import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
+import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+
 module Core {
     requires Common;
     requires javafx.graphics;
-    opens dk.sdu.mmmi.cbse.main to javafx.graphics;
-    uses dk.sdu.mmmi.cbse.common.services.IGamePluginService;
-    uses dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-    uses dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+    requires spring.context;
+    requires spring.core;
+    requires spring.beans;
+    opens dk.sdu.mmmi.cbse.main to javafx.graphics,spring.core, spring.beans, spring.context;
+    uses IGamePluginService;
+    uses IEntityProcessingService;
+    uses IPostEntityProcessingService;
 }
 
 
