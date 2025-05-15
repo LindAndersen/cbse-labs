@@ -3,3 +3,6 @@ mvn clean install
 
 Run the project from root folder with following Maven command :
 mvn exec:exec
+
+To run microservice
+.\gradlew.bat bootRun

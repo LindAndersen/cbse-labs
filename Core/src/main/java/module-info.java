@@ -8,6 +8,7 @@ module Core {
     requires spring.context;
     requires spring.core;
     requires spring.beans;
+    requires java.net.http;
     opens dk.sdu.mmmi.cbse.main to javafx.graphics,spring.core, spring.beans, spring.context;
     uses IGamePluginService;
     uses IEntityProcessingService;

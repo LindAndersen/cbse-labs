@@ -8,6 +8,13 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ServiceLoader;
+
 public class AsteroidProcessor implements IEntityProcessingService {
 
     private IAsteroidSplitter asteroidSplitter = new AsteroidSplitterImpl();
@@ -23,6 +30,24 @@ public class AsteroidProcessor implements IEntityProcessingService {
                     asteroidSplitter.createSplitAsteroid(asteroid, world);
                 } else {
                     world.removeEntity(asteroid);
+                }
+
+                try {
+                    HttpClient client = HttpClient.newHttpClient();
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .uri(new URI("http://localhost:8080/addScore?score=1"))
+                            .POST(HttpRequest.BodyPublishers.noBody())
+                            .build();
+
+                    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                            .thenAccept(response -> System.out.println("Score updated: " + response.body()))
+                            .exceptionally(ex -> {
+                                ex.printStackTrace();
+                                return null;
+                            });
+
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
                 }
             }
 

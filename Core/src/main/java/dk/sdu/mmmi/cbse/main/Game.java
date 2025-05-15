@@ -8,6 +8,7 @@ import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 import javafx.animation.AnimationTimer;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
@@ -15,8 +16,14 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Game {
@@ -27,6 +34,7 @@ public class Game {
     private final List<IGamePluginService> gamePluginServices;
     private final List<IEntityProcessingService> entityProcessingServiceList;
     private final List<IPostEntityProcessingService> postEntityProcessingServices;
+    private Text text;
 
     Game(List<IGamePluginService> gamePluginServices, List<IEntityProcessingService> entityProcessingServiceList, List<IPostEntityProcessingService> postEntityProcessingServices) {
         this.gamePluginServices = gamePluginServices;
@@ -35,7 +43,7 @@ public class Game {
     }
 
     public void start(Stage window) throws Exception {
-        Text text = new Text(10, 20, "Destroyed asteroids: 0");
+        text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
         gameWindow.getChildren().add(text);
 
@@ -82,6 +90,7 @@ public class Game {
         window.setScene(scene);
         window.setTitle("ASTEROIDS");
         window.show();
+        updateScore();
     }
 
     public void render() {
@@ -128,6 +137,32 @@ public class Game {
 
     }
 
+    private void updateScore() {
+        // Poll score every 1 second
+        HttpClient httpClient = HttpClient.newHttpClient();
+        Timer timer = new Timer(true); // daemon thread
+
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    HttpRequest request = HttpRequest.newBuilder()
+                            .uri(new URI("http://localhost:8080/getScore"))
+                            .GET()
+                            .build();
+
+                    HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+                    String score = response.body();
+                    Platform.runLater(() -> text.setText("Destroyed asteroids: " + score));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }, 0, 1000); // every 1000ms
+
+    }
+
     public List<IGamePluginService> getGamePluginServices() {
         return gamePluginServices;
     }
@@ -139,4 +174,5 @@ public class Game {
     public List<IPostEntityProcessingService> getPostEntityProcessingServices() {
         return postEntityProcessingServices;
     }
+
 }
