@@ -13,6 +13,7 @@ module Core {
     uses IGamePluginService;
     uses IEntityProcessingService;
     uses IPostEntityProcessingService;
+    uses dk.sdu.mmmi.cbse.common.services.IGraphicsProcessingService;
 }
 
 

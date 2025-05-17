@@ -7,6 +7,7 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.parts.CollisionPart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
+import dk.sdu.mmmi.cbse.common.services.IScoreSystemService;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,23 +33,7 @@ public class AsteroidProcessor implements IEntityProcessingService {
                     world.removeEntity(asteroid);
                 }
 
-                try {
-                    HttpClient client = HttpClient.newHttpClient();
-                    HttpRequest request = HttpRequest.newBuilder()
-                            .uri(new URI("http://localhost:8080/addScore?score=1"))
-                            .POST(HttpRequest.BodyPublishers.noBody())
-                            .build();
-
-                    client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
-                            .thenAccept(response -> System.out.println("Score updated: " + response.body()))
-                            .exceptionally(ex -> {
-                                ex.printStackTrace();
-                                return null;
-                            });
-
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                }
+                ServiceLoader.load(IScoreSystemService.class).findFirst().ifPresent(spi -> spi.addScore(1));
             }
 
             double changeX = Math.cos(Math.toRadians(asteroid.getRotation()));
