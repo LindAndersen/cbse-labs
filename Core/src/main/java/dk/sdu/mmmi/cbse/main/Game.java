@@ -107,13 +107,8 @@ public class Game {
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
-        IGraphicsUpdate graphicsUpdate = newText ->
-                Platform.runLater(() -> text.setText(newText));
-        for (IGraphicsProcessingService graphicsProcessingService : getIGraphicsProcessingServices())
-        {
-            graphicsProcessingService.process(graphicsUpdate);
-        }
 
+        ServiceLoader.load(IScoreSystemService.class).stream().findFirst().ifPresent(spi -> text.setText("Asteroids destroyed: " + spi.get().getScore()));
     }
 
     private void draw() {
@@ -149,9 +144,5 @@ public class Game {
 
     public List<IPostEntityProcessingService> getPostEntityProcessingServices() {
         return postEntityProcessingServices;
-    }
-
-    private Collection<? extends IGraphicsProcessingService> getIGraphicsProcessingServices() {
-        return ServiceLoader.load(IGraphicsProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 }
