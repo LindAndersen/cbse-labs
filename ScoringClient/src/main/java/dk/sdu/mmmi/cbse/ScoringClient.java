@@ -16,7 +16,7 @@ public class ScoringClient implements IScoreSystemService {
             String totalScore = restTemplate.postForObject(BASE_URL + "/addScore?score=" + score, null, String.class);
             return totalScore != null ? Long.parseLong(totalScore) : 0L;
         } catch (RestClientException e) {
-            System.err.println(e.getMessage());
+            //System.err.println(e.getMessage());
             return 0L;
         }
     }
@@ -27,7 +27,7 @@ public class ScoringClient implements IScoreSystemService {
             String score = restTemplate.getForObject(BASE_URL + "/getScore", String.class);
             return score != null ? Long.parseLong(score) : 0L;
         } catch (RestClientException e) {
-            System.err.println(e.getMessage());
+            //System.err.println(e.getMessage());
             return 0L; // or return -1L to indicate failure
         }
     }
