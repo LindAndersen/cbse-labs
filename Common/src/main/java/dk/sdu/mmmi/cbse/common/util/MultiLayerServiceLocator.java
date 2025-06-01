@@ -71,14 +71,21 @@ public enum MultiLayerServiceLocator {
         }
 
         List<T> all = new ArrayList<>();
-        for (ModuleLayer layer : pluginLayers) {
-            ServiceLoader<T> loader = ServiceLoader.load(layer, service);
-            for (T instance : loader) {
-                all.add(instance);
+
+        // If plugin layers are present, use them
+        if (!pluginLayers.isEmpty()) {
+            for (ModuleLayer layer : pluginLayers) {
+                ServiceLoader<T> loader = ServiceLoader.load(layer, service);
+                loader.forEach(all::add);
             }
         }
+
+        // Also always try loading from the system classloader (mods-mvn modules)
+        ServiceLoader<T> systemLoader = ServiceLoader.load(service);
+        systemLoader.forEach(all::add);
 
         serviceCache.put(service, new ArrayList<>(all));
         return all;
     }
+
 }
