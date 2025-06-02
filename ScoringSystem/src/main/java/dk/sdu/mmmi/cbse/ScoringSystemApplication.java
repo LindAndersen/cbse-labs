@@ -28,5 +28,4 @@ public class ScoringSystemApplication {
         totalScore += score;
         return totalScore ;
     }
-
 }
